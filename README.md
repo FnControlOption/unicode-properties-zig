@@ -8,7 +8,6 @@ Zig port of the [unicode-properties](https://github.com/unicode-rs/unicode-prope
 ```zig
 const std = @import("std");
 const debug = std.debug;
-const unicode = std.unicode;
 
 const unicode_properties = @import("unicode_properties");
 const EmojiStatus = unicode_properties.EmojiStatus;
@@ -18,9 +17,7 @@ const ch = '⚡'; // U+26A1 HIGH VOLTAGE SIGN
 const is_emoji = EmojiStatus.from(ch).isEmojiChar();
 const group = GeneralCategory.from(ch).group();
 
-var buf: [4]u8 = undefined;
-const len = try unicode.utf8Encode(ch, &buf);
-debug.print("{s}({s})\n", .{ buf[0..len], @tagName(group) });
+debug.print("{u}({s})\n", .{ ch, @tagName(group) });
 debug.print("The above char {s} for use as emoji char.\n", .{
     if (is_emoji) "is recommended" else "is not recommended",
 });
