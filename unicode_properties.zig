@@ -30,13 +30,13 @@
 //! Provides the emoji character properties of a character.
 //!
 
-const tables = @import("unicode_properties/tables.zig");
+const tables = @import("tables.zig");
 pub const UNICODE_VERSION = tables.UNICODE_VERSION;
 
-pub const emoji = @import("unicode_properties/emoji.zig");
+pub const emoji = @import("emoji.zig");
 pub const EmojiStatus = emoji.EmojiStatus;
 
-pub const general_category = @import("unicode_properties/general_category.zig");
+pub const general_category = @import("general_category.zig");
 pub const GeneralCategory = general_category.GeneralCategory;
 pub const GeneralCategoryGroup = general_category.GeneralCategoryGroup;
 
