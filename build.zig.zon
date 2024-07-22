@@ -1,0 +1,19 @@
+.{
+    .name = "unicode-properties",
+    .version = "0.1.0-dev",
+    .minimum_zig_version = "0.14.0-dev.364+8ab70f80c",
+
+    .paths = .{
+        "COPYRIGHT-RUST",
+        "LICENSE-APACHE",
+        "LICENSE-MIT",
+        "README.md",
+        "build.zig",
+        "build.zig.zon",
+        "emoji.zig",
+        "general_category.zig",
+        "tables.zig",
+        "unicode_properties.zig",
+        "util.zig",
+    },
+}
