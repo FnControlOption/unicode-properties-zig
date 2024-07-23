@@ -277,7 +277,7 @@ def emit_emoji_module(f):
             pfun=lambda x: ".{ %s, %s, %s }" % (escape_char(x[0]), escape_char(x[1]), x[2]))
 
 if __name__ == "__main__":
-    r = "unicode_properties/tables.zig"
+    r = "tables.zig"
     if os.path.exists(r):
         os.remove(r)
     with open(r, "w") as rf:
