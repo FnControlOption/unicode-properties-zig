@@ -12,6 +12,7 @@
 //! Query the emoji character properties of a character.
 
 const std = @import("std");
+const debug = std.debug;
 const testing = std.testing;
 
 const tables = @import("tables.zig");
@@ -41,7 +42,8 @@ pub const EmojiStatus = enum(u4) {
 
     inline fn from(c: u21) EmojiStatus {
         // FIXME: do we want to special case ASCII here?
-        return util.bsearch_range_value_table(EmojiStatus, c, tables.emoji_status).?;
+        return util.bsearch_range_value_table(EmojiStatus, c, tables.emoji_status) orelse
+            debug.panic("attempted to get emoji status for surrogate: \\u{{{x}}}", .{c});
     }
 
     inline fn isEmojiCharOrEmojiComponent(s: EmojiStatus) bool {
