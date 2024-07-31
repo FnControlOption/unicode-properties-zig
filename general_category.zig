@@ -157,7 +157,7 @@ pub fn generalCategory(c: u21) GeneralCategory {
     return GeneralCategory.from(c);
 }
 
-test GeneralCategory {
+test generalCategory {
     try testing.expectEqual(.uppercase_letter, generalCategory('A'));
     try testing.expectEqual(.space_separator, generalCategory(' '));
     try testing.expectEqual(.other_letter, generalCategory('一'));
@@ -169,7 +169,7 @@ pub fn generalCategoryGroup(c: u21) GeneralCategoryGroup {
     return GeneralCategory.from(c).group();
 }
 
-test GeneralCategoryGroup {
+test generalCategoryGroup {
     try testing.expectEqual(.letter, generalCategoryGroup('A'));
     try testing.expectEqual(.separator, generalCategoryGroup(' '));
     try testing.expectEqual(.letter, generalCategoryGroup('一'));

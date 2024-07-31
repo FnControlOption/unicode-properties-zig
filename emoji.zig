@@ -70,7 +70,7 @@ pub fn emojiStatus(c: u21) EmojiStatus {
     return EmojiStatus.from(c);
 }
 
-test EmojiStatus {
+test emojiStatus {
     try testing.expectEqual(.emoji_presentation, emojiStatus('🦀'));
 }
 
