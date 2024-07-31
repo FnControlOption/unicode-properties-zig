@@ -39,25 +39,20 @@ pub const EmojiStatus = enum(u4) {
     emoji_other_and_emoji_component,
     _,
 
-    /// Returns the emoji character properties in a status enum.
-    pub fn from(c: u21) EmojiStatus {
+    inline fn from(c: u21) EmojiStatus {
         // FIXME: do we want to special case ASCII here?
-        return util.bsearch_range_value_table(EmojiStatus, c, tables.EMOJI_STATUS).?;
+        return util.bsearch_range_value_table(EmojiStatus, c, tables.emoji_status).?;
     }
 
-    /// Checks whether this character occurs in emoji sequences, i.e. `Emoji=YES | Emoji_Component=YES`
-    pub fn isEmojiCharOrEmojiComponent(s: EmojiStatus) bool {
+    inline fn isEmojiCharOrEmojiComponent(s: EmojiStatus) bool {
         return s != .non_emoji;
     }
 
-    /// Checks whether this character is recommended for use as emoji, i.e. `Emoji=YES`.
-    pub fn isEmojiChar(s: EmojiStatus) bool {
+    inline fn isEmojiChar(s: EmojiStatus) bool {
         return s != .non_emoji and s != .non_emoji_but_emoji_component;
     }
 
-    /// Checks whether this character are used in emoji sequences where they're not
-    /// intended for independent, direct input, i.e. `Emoji_Component=YES`.
-    pub fn isEmojiComponent(s: EmojiStatus) bool {
+    inline fn isEmojiComponent(s: EmojiStatus) bool {
         return switch (s) {
             .emoji_presentation_and_emoji_component,
             .emoji_presentation_and_modifier_and_emoji_component,
@@ -68,11 +63,41 @@ pub const EmojiStatus = enum(u4) {
     }
 };
 
+/// Returns the emoji character properties in a status enum.
+pub fn emojiStatus(c: u21) EmojiStatus {
+    return EmojiStatus.from(c);
+}
+
 test EmojiStatus {
-    try testing.expectEqual(.emoji_presentation, EmojiStatus.from('⚡'));
-    try testing.expect(EmojiStatus.from('⚡').isEmojiChar());
-    try testing.expectEqual(false, EmojiStatus.from('⚡').isEmojiComponent());
-    try testing.expect(EmojiStatus.from('⚡').isEmojiCharOrEmojiComponent());
+    try testing.expectEqual(.emoji_presentation, emojiStatus('🦀'));
+}
+
+/// Checks whether this character is recommended for use as emoji, i.e. `Emoji=YES`.
+pub fn isEmojiChar(c: u21) bool {
+    return EmojiStatus.from(c).isEmojiChar();
+}
+
+test isEmojiChar {
+    try testing.expect(isEmojiChar('🦀'));
+}
+
+/// Checks whether this character are used in emoji sequences where they're not
+/// intended for independent, direct input, i.e. `Emoji_Component=YES`.
+pub fn isEmojiComponent(c: u21) bool {
+    return EmojiStatus.from(c).isEmojiComponent();
+}
+
+test isEmojiComponent {
+    try testing.expectEqual(false, isEmojiComponent('🦀'));
+}
+
+/// Checks whether this character occurs in emoji sequences, i.e. `Emoji=YES | Emoji_Component=YES`
+pub fn isEmojiCharOrEmojiComponent(c: u21) bool {
+    return EmojiStatus.from(c).isEmojiCharOrEmojiComponent();
+}
+
+test isEmojiCharOrEmojiComponent {
+    try testing.expect(isEmojiCharOrEmojiComponent('🦀'));
 }
 
 /// Checks whether this character is the U+200D ZERO WIDTH JOINER (ZWJ) character.

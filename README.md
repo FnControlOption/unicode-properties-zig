@@ -10,12 +10,12 @@ const std = @import("std");
 const debug = std.debug;
 
 const unicode_properties = @import("unicode_properties");
-const EmojiStatus = unicode_properties.EmojiStatus;
-const GeneralCategory = unicode_properties.GeneralCategory;
+const unicode_emoji = unicode_properties.emoji;
+const unicode_general_category = unicode_properties.general_category;
 
 const ch = '⚡'; // U+26A1 HIGH VOLTAGE SIGN
-const is_emoji = EmojiStatus.from(ch).isEmojiChar();
-const group = GeneralCategory.from(ch).group();
+const is_emoji = unicode_emoji.isEmojiChar(ch);
+const group = unicode_general_category.generalCategoryGroup(ch);
 
 debug.print("{u}({s})\n", .{ ch, @tagName(group) });
 debug.print("The above char {s} for use as emoji char.\n", .{

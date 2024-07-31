@@ -80,24 +80,18 @@ pub const GeneralCategory = enum {
     /// `Cn`, a reserved unassigned code point or a noncharacter
     unassigned,
 
-    /// Queries the most general classification of a character.
-    pub fn from(c: u21) GeneralCategory {
-        return util.bsearch_range_value_table(GeneralCategory, c, tables.GENERAL_CATEGORY) orelse .unassigned;
+    inline fn from(c: u21) GeneralCategory {
+        return util.bsearch_range_value_table(GeneralCategory, c, tables.general_category) orelse .unassigned;
     }
 
-    /// Queries whether the most general classification of a character belongs to the `LetterCased` group
-    ///
-    /// The `LetterCased` group includes `LetterUppercase`, `LetterLowercase`, and `LetterTitlecase`
-    /// categories, and is a subset of the `Letter` group.
-    pub fn isLetterCased(gc: GeneralCategory) bool {
+    inline fn isLetterCased(gc: GeneralCategory) bool {
         return switch (gc) {
             .uppercase_letter, .lowercase_letter, .titlecase_letter => true,
             else => false,
         };
     }
 
-    /// Queries the grouping of the most general classification of a character.
-    pub fn group(gc: GeneralCategory) GeneralCategoryGroup {
+    inline fn group(gc: GeneralCategory) GeneralCategoryGroup {
         return switch (gc) {
             .uppercase_letter,
             .lowercase_letter,
@@ -158,20 +152,41 @@ pub const GeneralCategoryGroup = enum {
     other,
 };
 
+/// Queries the most general classification of a character.
+pub fn generalCategory(c: u21) GeneralCategory {
+    return GeneralCategory.from(c);
+}
+
 test GeneralCategory {
-    try testing.expectEqual(.uppercase_letter, GeneralCategory.from('A'));
-    try testing.expectEqual(.letter, GeneralCategory.from('A').group());
-    try testing.expect(GeneralCategory.from('A').isLetterCased());
+    try testing.expectEqual(.uppercase_letter, generalCategory('A'));
+    try testing.expectEqual(.space_separator, generalCategory(' '));
+    try testing.expectEqual(.other_letter, generalCategory('一'));
+    try testing.expectEqual(.other_symbol, generalCategory('🦀'));
+}
 
-    try testing.expectEqual(.space_separator, GeneralCategory.from(' '));
-    try testing.expectEqual(.separator, GeneralCategory.from(' ').group());
-    try testing.expectEqual(false, GeneralCategory.from(' ').isLetterCased());
+/// Queries the grouping of the most general classification of a character.
+pub fn generalCategoryGroup(c: u21) GeneralCategoryGroup {
+    return GeneralCategory.from(c).group();
+}
 
-    try testing.expectEqual(.other_letter, GeneralCategory.from('一'));
-    try testing.expectEqual(.letter, GeneralCategory.from('一').group());
-    try testing.expectEqual(false, GeneralCategory.from('一').isLetterCased());
+test GeneralCategoryGroup {
+    try testing.expectEqual(.letter, generalCategoryGroup('A'));
+    try testing.expectEqual(.separator, generalCategoryGroup(' '));
+    try testing.expectEqual(.letter, generalCategoryGroup('一'));
+    try testing.expectEqual(.symbol, generalCategoryGroup('🦀'));
+}
 
-    try testing.expectEqual(.other_symbol, GeneralCategory.from('⚡'));
-    try testing.expectEqual(.symbol, GeneralCategory.from('⚡').group());
-    try testing.expectEqual(false, GeneralCategory.from('⚡').isLetterCased());
+/// Queries whether the most general classification of a character belongs to the `LetterCased` group
+///
+/// The `LetterCased` group includes `LetterUppercase`, `LetterLowercase`, and `LetterTitlecase`
+/// categories, and is a subset of the `Letter` group.
+pub fn isLetterCased(c: u21) bool {
+    return GeneralCategory.from(c).isLetterCased();
+}
+
+test isLetterCased {
+    try testing.expect(isLetterCased('A'));
+    try testing.expectEqual(false, isLetterCased(' '));
+    try testing.expectEqual(false, isLetterCased('一'));
+    try testing.expectEqual(false, isLetterCased('🦀'));
 }
